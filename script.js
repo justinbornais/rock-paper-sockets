@@ -6,7 +6,7 @@ let scores = null;
 
 // Helper to display messages
 function updateStatus(message) {
-    document.getElementById("status").innerText = message;
+    document.getElementById("status").innerHTML = message;
 }
 
 function connectToGame() {
@@ -15,6 +15,8 @@ function connectToGame() {
     updateStatus("Please enter a valid 4-digit game code.");
     return;
   }
+
+  updateStatus('Waiting for another player...');
 
   ws = new WebSocket(`ws://localhost:8000/ws/${gameCode}`);
   ws.onopen = () => {
