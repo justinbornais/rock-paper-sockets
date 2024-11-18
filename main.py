@@ -52,11 +52,14 @@ async def websocket_endpoint(websocket: WebSocket, game_code: str):
 
   # Notify both players when the second player joins
   if len(game.players) == 2:
+    i = 0
     for player in game.players:
       await player.send_json({
           "action": "game_started",
           "message": "Game has started! Please make your move.",
+          "player_id": str(i)
       })
+      i += 1
 
   try:
     while True:
@@ -72,15 +75,7 @@ async def websocket_endpoint(websocket: WebSocket, game_code: str):
           winner = game.calculate_winner()
           if winner is not None:
             game.scores[winner] += 1
-
-          for i, player in enumerate(game.players):
-            await player.send_json({
-              "action": "result",
-              "winner": winner,
-              "scores": game.scores,
-              "opponent_move": game.moves[1 - i],
-            })
-
+          
           # Check if game is over.
           if max(game.scores.values()) == WINNING_POINTS:
             for player in game.players:
@@ -90,6 +85,14 @@ async def websocket_endpoint(websocket: WebSocket, game_code: str):
               })
             del games[game_code]
             break
+
+          for i, player in enumerate(game.players):
+            await player.send_json({
+              "action": "result",
+              "winner": winner,
+              "scores": game.scores,
+              "opponent_move": game.moves[1 - i],
+            })
 
           game.reset_moves()
 

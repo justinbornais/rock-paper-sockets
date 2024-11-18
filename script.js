@@ -1,6 +1,8 @@
 let ws = null;
 let gameCode = '';
 let playerId = null;
+let move = null;
+let scores = null;
 
 // Helper to display messages
 function updateStatus(message) {
@@ -27,23 +29,23 @@ function connectToGame() {
 
     if (data.action === "game_started") {
       updateStatus("Game has started! Please make your move.");
+      playerId = parseInt(data.player_id);
       document.getElementById("move-buttons").style.display = "block";
     } else if (data.action === "result") {
       const winner = data.winner;
       const opponentMove = data.opponent_move;
-      const scores = data.scores;
+      scores = data.scores;
 
       document.getElementById("round-result").innerText =
         winner === null
           ? `It's a tie! Opponent played ${opponentMove}.`
-          : `You ${winner === playerId ? "win" : "lose"} this round! Opponent played ${opponentMove}.`;
+          : `You ${winner === playerId ? "win" : "lose"} this round! You played ${move}. Opponent played ${opponentMove}.`;
 
       if (scores) {
         document.getElementById("round-result").innerText += ` Scores: You (${scores[playerId]}), Opponent (${scores[1 - playerId]})`;
       }
     } else if (data.action === "game_over") {
       const gameWinner = data.winner;
-      console.log(gameWinner, scores);
       document.getElementById("game-result").innerText =
         gameWinner === playerId
           ? "You win the game!"
@@ -74,7 +76,7 @@ document.getElementById("connect-btn").addEventListener("click", connectToGame);
 
 document.querySelectorAll(".move-btn").forEach((button) => {
   button.addEventListener("click", () => {
-    const move = button.getAttribute("data-move");
+    move = button.getAttribute("data-move");
     sendMove(move);
   });
 });
