@@ -18,7 +18,7 @@ function connectToGame() {
 
   updateStatus('Waiting for another player...');
 
-  ws = new WebSocket(`ws://localhost:8000/ws/${gameCode}`);
+  ws = new WebSocket(`ws://${location.host}/ws/${gameCode}`);
   ws.onopen = () => {
     updateStatus("Connected to game room.");
     document.getElementById("game-setup").style.display = "none";
@@ -53,6 +53,7 @@ function connectToGame() {
           ? "You win the game!"
           : "You lose the game!";
       document.getElementById("move-buttons").style.display = "none";
+      document.getElementById("round-result").style.display = "none";
     }
   };
 

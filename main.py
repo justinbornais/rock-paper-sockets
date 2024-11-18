@@ -1,10 +1,21 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from typing import Dict, List
+import os
 
 # Set up variables.
 app = FastAPI()
 games = {}
 WINNING_POINTS = 3
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/")
+async def get_root():
+    html_file = os.path.join("static", "index.html")
+    with open(html_file, "r") as file:
+        return HTMLResponse(content=file.read(), media_type="text/html")
 
 class GameRoom:
   def __init__(self, code):
