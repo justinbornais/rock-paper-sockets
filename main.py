@@ -50,6 +50,14 @@ async def websocket_endpoint(websocket: WebSocket, game_code: str):
   game.add_player(websocket)
   player_id = len(game.players) - 1
 
+  # Notify both players when the second player joins
+  if len(game.players) == 2:
+    for player in game.players:
+      await player.send_json({
+          "action": "game_started",
+          "message": "Game has started! Please make your move.",
+      })
+
   try:
     while True:
       data = await websocket.receive_json()
