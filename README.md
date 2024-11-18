@@ -1,1 +1,1 @@
-# rock-paper-sockets
+# Rock Paper Sockets
