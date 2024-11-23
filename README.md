@@ -31,6 +31,7 @@ Then to run the application, execute the following:
 go run .
 ```
 
+### Run Project using `air`
 You can also optionally install `air`, which allows for live reloading the server by running the following:
 ```sh
 go install github.com/cosmtrek/air@latest
